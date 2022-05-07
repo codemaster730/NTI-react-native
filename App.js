@@ -2,12 +2,13 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import NextTrainIndicator from "./components/nextTrainIndicator";
+import strings from "./config/string";
 
 export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.text}>Next Train Indicator</Text>
+        <Text style={styles.text}>{strings.HEADER}</Text>
       </View>
       <NextTrainIndicator />
       <StatusBar style="auto" />

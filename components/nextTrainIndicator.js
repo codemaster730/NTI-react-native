@@ -1,6 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import { data } from "./data";
+import data from "../config/data";
+import constants from "../config/constants";
+import strings from "../config/string";
+import numberToMinute from "../utils/numberToMinute";
+import VirtualTimer from "./virtualTImer";
 
 const NextTrainIndicator = () => {
   const [hour, setHour] = useState(5);
@@ -21,13 +25,13 @@ const NextTrainIndicator = () => {
   useEffect(() => {
     setInterval(() => {
       setSeconds(new Date().getSeconds());
-    }, 1000);
+    }, constants.MILLISECONDS_PER_SECOND);
   }, []);
 
   useEffect(() => {
-    setMinutes((minutes + 1) % 60);
-    if (minutes == 59) {
-      setHour((hour + 1) % 24);
+    setMinutes((minutes + 1) % constants.MINUTES_PER_HOUR);
+    if (minutes == constants.MINUTES_PER_HOUR - 1) {
+      setHour((hour + 1) % constants.HOURS_PER_DAY);
     }
   }, [seconds]);
 
@@ -39,7 +43,7 @@ const NextTrainIndicator = () => {
     let trainData = [];
     data.forEach((train, index) => {
       const { startTime, endTime, frequency, destination } = train;
-      const currentTime = 60 * hour + minutes;
+      const currentTime = constants.MINUTES_PER_HOUR * hour + minutes;
       let item = {};
       let condition =
         startTime < endTime
@@ -62,7 +66,9 @@ const NextTrainIndicator = () => {
     setTrains(trainData);
 
     trainData = trainData.filter(
-      (item) => item.arrivalTime > 0 && item.arrivalTime <= 15
+      (item) =>
+        item.arrivalTime > constants.MIN_TIME &&
+        item.arrivalTime <= constants.MAX_TIME
     );
     trainData.sort((a, b) => a.arrivalTime - b.arrivalTime);
     setFTrains(trainData);
@@ -72,9 +78,11 @@ const NextTrainIndicator = () => {
     <View style={styles.container}>
       <View style={styles.trainContainer}>
         <View style={styles.train}>
-          <Text style={styles.oderHeader}>Order</Text>
-          <Text style={styles.destinationHeader}>Destination</Text>
-          <Text style={styles.arrivalTimeHeader}>Arrival Time</Text>
+          <Text style={styles.oderHeader}>{strings.ORDER}</Text>
+          <Text style={styles.destinationHeader}>{strings.DESTINATION}</Text>
+          <Text style={styles.arrivalTimeHeader}>
+            {strings.ARRIVING_TRAINS}
+          </Text>
         </View>
         {fTrains.length ? (
           fTrains.map((item, index) => {
@@ -82,34 +90,24 @@ const NextTrainIndicator = () => {
               <View key={index} style={styles.train}>
                 <Text style={styles.order}>{index + 1}</Text>
                 <Text style={styles.destination}>{item.destination}</Text>
-                <Text style={styles.arrivalTime}>{item.arrivalTime}</Text>
-                {item.arrivalTime == 1 ? (
-                  <Text style={styles.minText}>min</Text>
-                ) : (
-                  <Text style={styles.minText}>mins</Text>
-                )}
+                <Text style={styles.arrivalTime}>
+                  {numberToMinute(item.arrivalTime)}
+                </Text>
               </View>
             );
           })
         ) : (
           <View style={styles.description}>
             <Text style={styles.descriptionText}>
-              No trains within 15 minutes.
+              {strings.NTI_DESCRIPTION1}
             </Text>
-            <Text style={styles.descriptionText}>Trains are coming soon.</Text>
+            <Text style={styles.descriptionText}>
+              {strings.NTI_DESCRIPTION2}
+            </Text>
           </View>
         )}
       </View>
-      <View style={styles.timerContainer}>
-        <Text style={styles.timeText}>Virtual Timer </Text>
-        <Text style={styles.time}>{hour < 10 ? "0" + hour : hour}</Text>
-        <Text style={styles.time}> : </Text>
-        <Text style={styles.time}>
-          {minutes < 10 ? "0" + minutes : minutes}
-        </Text>
-        <Text style={styles.time}> : </Text>
-        <Text style={styles.time}>00</Text>
-      </View>
+      <VirtualTimer hour={hour} minutes={minutes} />
     </View>
   );
 };
@@ -177,7 +175,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   arrivalTime: {
-    width: "25%",
+    width: "40%",
     textAlign: "right",
     fontSize: 15,
   },
@@ -186,10 +184,6 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontSize: 18,
     fontWeight: "bold",
-  },
-  minText: {
-    width: "15%",
-    textAlign: "right",
   },
   timerContainer: {
     display: "flex",

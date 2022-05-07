@@ -1,4 +1,4 @@
-export const data = [
+const data = [
   {
     order: 1,
     destination: "Central Station",
@@ -32,3 +32,5 @@ export const data = [
     endTime: 1 * 60 + 30, //01:30
   },
 ];
+
+export default data;
