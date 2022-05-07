@@ -1,5 +1,5 @@
 const formatNumberForTimer = (number) => {
-  if (number > 10) {
+  if (number > 9) {
     return number + " : ";
   } else {
     return "0" + number + " : ";
