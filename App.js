@@ -2,7 +2,7 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import NextTrainIndicator from "./components/nextTrainIndicator";
-import strings from "./config/string";
+import { strings } from "./config";
 
 export default function App() {
   return (
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: '#e3e3e3'
+    backgroundColor: "#e3e3e3",
   },
   header: {
     width: "100%",
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontSize: 26,
-    paddingLeft: 10
-  }
+    paddingLeft: 10,
+  },
 });

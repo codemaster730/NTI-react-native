@@ -1,8 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import strings from "../config/string";
-import formatNumberForTimer from "../utils/formatNumberForTimer";
-
+import { strings } from "../config";
+import { formatNumberForTimer } from "../utils";
 
 const VirtualTimer = ({ hour, minutes }) => {
   return (

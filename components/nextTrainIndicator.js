@@ -1,13 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import data from "../config/data";
-import constants from "../config/constants";
-import strings from "../config/string";
-import numberToMinute from "../utils/numberToMinute";
+import { data, constants, strings } from "../config";
 import VirtualTimer from "./virtualTImer";
-
+import { numberToMinute } from "../utils";
 const NextTrainIndicator = () => {
-  const [hour, setHour] = useState(5);
+  const [hour, setHour] = useState(constants.VT_START_HOUR);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [trains, setTrains] = useState(() => {
